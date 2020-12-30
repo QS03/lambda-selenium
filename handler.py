@@ -1,5 +1,6 @@
 import os
 import json
+import zipfile
 from datetime import datetime
 import urllib.parse as urlparse
 from bs4 import BeautifulSoup
@@ -12,17 +13,24 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 
-def handler(event, context):
-    run_scrapper('https://google.com')
+def chromium_extractor(func):
+    def wrapper_to_func():
+        with zipfile.ZipFile('./bin.zip', 'r') as zip_ref:
+            zip_ref.extractall('/tmp/bin')
+        os.system('chmod 755 /tmp/bin/*')
+        func()
+
+    return wrapper_to_func
 
 
-def run_scrapper(url):
+@chromium_extractor
+def run_scrapper():
+    url = 'https://google.com'
 
     try:
         print(f"Started at: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}")
 
-        dir = os.path.dirname(os.path.abspath(__file__))
-        driver_path = dir + "/bin/chromedriver"
+        driver_path = "/tmp/bin/chromedriver"
         chrome_options = Options()
 
         chrome_options.add_argument('--headless')
@@ -31,7 +39,7 @@ def run_scrapper(url):
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument("--window-size=1920,1080")
 
-        chrome_options.binary_location = dir + "/bin/headless-chromium"
+        chrome_options.binary_location = "/tmp/bin/headless-chromium"
         driver = webdriver.Chrome(driver_path, chrome_options=chrome_options)
         driver.get(url)
 
@@ -44,5 +52,9 @@ def run_scrapper(url):
         print(e)
 
 
+def handler(event, context):
+    run_scrapper()
+
+
 if __name__ == "__main__":
-    run_scrapper('https://google.com')
+    run_scrapper()
