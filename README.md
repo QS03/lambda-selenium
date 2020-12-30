@@ -1,5 +1,5 @@
 ## Deployment Guide
 
-Depress zip file, which is containing chrome driver and binary.
+Extract bin.zip file before deployment. bin.zip contains chrome driver, headless chrome binary and shared objects. 
 
 ## Enjoy!

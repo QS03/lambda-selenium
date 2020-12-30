@@ -27,3 +27,5 @@ node_modules/
 config.json
 
 __pycache__
+
+bin/
