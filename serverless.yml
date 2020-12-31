@@ -4,7 +4,7 @@ provider:
   name: aws
   runtime: python3.6
   stage: ${opt:stage, 'dev'}
-  region: ${file(./config.json):REGION}
+  region: us-east-1
 
 
 # It is not possible to reference files on directory levels above serverless.yml directly when working in AWS Lambda
@@ -14,7 +14,7 @@ provider:
 # fdc_data_dynamodb is present two levels above this serverless.yml, but in common.py it can be imported from cur dir.
 package:
   include:
-    - bin/**
+    - bin.zip
   exclude:
     - node_modules/**
     - env/**
